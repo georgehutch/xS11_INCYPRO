@@ -1,0 +1,59 @@
+#!/bin/bash
+#
+#PBS -q gpu
+#PBS -l walltime=100:0:0,nodes=1:ppn=1:gpus=1
+#PBS -N m4d2_holo
+#PBS -j oe
+#PBS -o ./m4d2_holo.pbsout
+# 1. Load module(s)
+#
+module add apps/amber-16
+echo "--------- Starting ------------"
+echo $(date)
+
+# 2. Set directories
+
+export MYDIR="$HOME/m4d2/holo_md/"
+export MYEXE="pmemd.cuda"
+
+cd $MYDIR 
+pwd
+
+# 3. Set protein name
+
+export PROTEIN="m4d2"
+echo $PROTEIN
+
+# 4. Minimisation (minsolv and min run on CPU, all other steps use GPU/CUDA)
+
+echo "Starting minsolv"
+pmemd -O -i minsolv.i -o minsolv.log -p $PROTEIN.prmtop -c $PROTEIN.inpcrd -ref $PROTEIN.inpcrd -r minsolv.rst 
+MYEXE="pmemd.cuda"
+
+old=minsolv
+for name in mdsolv min heat eq_npt; do
+	echo "Starting $name"
+	if [ $name = min ]; then
+		MYEXE="pmemd"
+	fi  
+ 
+	$MYEXE -O -i $name.i -o $name.log -p $PROTEIN.prmtop -c $old.rst -ref $PROTEIN.inpcrd -x $name.nc -r $name.rst 
+	old=$name
+	MYEXE="pmemd.cuda"
+done
+
+old="eq_npt" 
+x0=0
+
+# 5. Production MD (100ns in 10ns steps)
+
+ln -s $old.rst md$x0.rst
+
+int=10
+x=`expr $x0 + $int`
+X=100
+for x in `seq $x $int $X`; do
+	pmemd.cuda -O -i md.i -o md$x.log -p $PROTEIN.prmtop -c md$x0.rst -x md$x.nc -r md$x.rst 
+	x0=$x
+done
+
