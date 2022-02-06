@@ -1,0 +1,22 @@
+Remark line goes here
+MASS
+
+BOND
+c3-S   227.0    1.810       changed from 222.0 based on dimethylS nmodes (CT-S)
+
+ANGLE
+S-c3-c   61.800     108.720   same as c -c3-sh, penalty score=  0.0
+S-c3-h1     50.0      109.50    AA cys     changed based on NMA nmodes (H1-CT-S)
+c3-S-2C    62.0      104.50    edit GH based on (CT-S -2C)
+
+DIHE
+X -c3-S -X    3    1.00          0.0             3.         JCC,7,(1986),230 (X -CT-S -X)
+
+IMPROPER
+c3-n -c -o         10.5          180.0         2.0          Using general improper torsional angle  X- X- c- o, penalty score=  6.0)
+
+NONBON
+
+
+
+
