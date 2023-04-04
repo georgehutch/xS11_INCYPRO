@@ -1,0 +1,15 @@
+source leaprc.protein.ff14SB
+source leaprc.water.tip3p
+source leaprc.gaff
+loadoff ae2.lib
+loadamberparams ae2.frcmod
+mol = loadpdb Srt11Mx_400ns.pdb
+bond mol.51.SG mol.146.C18
+bond mol.89.SG mol.146.C15
+bond mol.117.SG mol.146.C17
+check mol
+solvatebox mol TIP3PBOX 12
+addIons2 mol Cl- 0
+savepdb mol Srt11Mx_400ns_leap.pdb
+saveamberparm mol Srt11Mx_400ns.prmtop Srt11Mx_400ns.inpcrd
+quit
