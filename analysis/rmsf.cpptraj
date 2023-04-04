@@ -1,0 +1,17 @@
+# CPPTraj Input
+parm *.prmtop
+list parm
+parminfo 0
+trajin 500ns.nc
+rms first out rms @CA,C,N,O&!:WAT
+atomicfluct @CA,C,O,N&!:WAT byres out rmsf_500ns.dat
+run
+quit
+
+
+
+
+
+
+
+
