@@ -1,0 +1,9 @@
+# CPPTraj Input
+parm *.prmtop
+list parm
+parminfo 0
+trajin 500ns.nc
+list trajin
+rmsd backbone_all :10-142@CA,C,N&!:WAT first out rmsd_backbone_short.dat #non-terminal residues
+run
+quit
